@@ -1,9 +1,10 @@
-Requires a module which is capable of produce, on demand, a random verse, as a map 
+Requires a module which is capable of producing, on demand, a random verse, as a map 
 whose key is the reference and whose value is the text of the verse
 
 An example of such a module
 
-```ruleset bofm.random {
+```
+ruleset bofm.random {
   meta {
     provides verse
   }
@@ -12,4 +13,5 @@ An example of such a module
       { "1 Nephi 7:3": "I will go and do..." }
     }
   }
-}```
+}
+```
