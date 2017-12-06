@@ -6,9 +6,11 @@ ruleset bofm.router {
   global {
     __testing = { "queries": [ { "name": "__testing" } ],
                   "events": [ ] }
-    my_consumers = function() {
-      subscription:getSubscriptions(["attributes","subscriber_role"],"consumer")
-        .map(function(v){v.values().head()})
+  }
+  rule initialize {
+    select when wrangler ruleset_added where rids >< meta:rid
+    fired {
+      ent:consumers := {};
     }
   }
   rule autoAccept {
@@ -21,13 +23,16 @@ ruleset bofm.router {
           attributes attributes;
     }
   }
+  rule bofm_new_consumer {
+    select when bofm new_consumer consumer_eci re#(.+)# setting(consumer_eci)
+    fired {
+      ent:consumers{consumer_eci} := event:attr("host");
+    }
+  }
   rule incoming_verse {
     select when bofm verse
-    foreach my_consumers() setting(s)
-    pre {
-      eci = s{["attributes","outbound_eci"]};
-    }
+    foreach ent:consumers setting(host,eci)
     event:send({"eci":eci, "domain": "bofm", "type": "verse", "attrs": event:attrs()},
-      s{["attributes","subscriber_host"]});
+      host);
   }
 }

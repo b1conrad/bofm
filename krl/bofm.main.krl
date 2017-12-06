@@ -14,7 +14,7 @@ ruleset bofm.main {
       [ { "domain": "bofm", "type": "test" }
       , { "domain": "bofm", "type": "start_request", "attrs": [ "minutes" ] }
       , { "domain": "bofm", "type": "idle_request" }
-      , { "domain": "bofm", "type": "new_consumer", "attrs": [ "did" ] }
+      , { "domain": "bofm", "type": "new_consumer", "attrs": [ "did", "host" ] }
       ]
     }
     verse = function() {
@@ -124,13 +124,8 @@ ruleset bofm.main {
       router_eci = my_routers().head(){["attributes","subscriber_eci"]};
     }
     event:send(
-      { "eci": consumer_eci, "eid": "subscription",
-        "domain": "wrangler", "type": "subscription",
-        "attrs": { "name": "consumer",
-                   "name_space": "bofm",
-                   "my_role": "consumer",
-                   "subscriber_role": "router",
-                   "channel_type": "subscription",
-                   "subscriber_eci": router_eci } } )
+      { "eci": router_eci, "eid": "new-consumer",
+        "domain": "bofm", "type": "new_consumer",
+        "attrs": event:attrs().put("consumer_eci",consumer_eci) } )
   }
 }
