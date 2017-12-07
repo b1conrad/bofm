@@ -8,6 +8,7 @@ ruleset bofm.consumer {
   }
   rule initialize {
     select when wrangler ruleset_added where rids >< meta:rid
+             or pico ruleset_added where rid == meta:rid
     fired {
       ent:refs := {};
       ent:txts := {};
