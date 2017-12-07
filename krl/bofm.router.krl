@@ -4,8 +4,14 @@ ruleset bofm.router {
     shares __testing
   }
   global {
-    __testing = { "queries": [ { "name": "__testing" } ],
-                  "events": [ ] }
+    __testing =
+    { "queries":
+      [ { "name": "__testing" }
+      ]
+    , "events":
+      [ { "domain": "bofm", "type": "consumer_removed", "attrs": [ "consumer_eci"] }
+      ]
+    }
   }
   rule initialize {
     select when wrangler ruleset_added where rids >< meta:rid
@@ -27,6 +33,12 @@ ruleset bofm.router {
     select when bofm new_consumer consumer_eci re#(.+)# setting(consumer_eci)
     fired {
       ent:consumers{consumer_eci} := event:attr("host");
+    }
+  }
+  rule bofm_consumer_removed {
+    select when bofm consumer_removed consumer_eci re#(.+)# setting(consumer_eci)
+    fired {
+      clear ent:consumers{consumer_eci};
     }
   }
   rule incoming_verse {
