@@ -44,6 +44,7 @@ ruleset bofm.consumer {
 <p>
 Collected between #{timestamps.head()}
 and #{timestamps[timestamps.length()-1]}
+(#{timestamps.length().as("String")})
 </p>#{refs_form()}</body>
 </html>
 >>
