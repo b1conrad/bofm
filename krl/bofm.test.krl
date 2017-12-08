@@ -4,9 +4,12 @@ ruleset bofm.test {
     shares __testing, tests
   }
   global {
-    __testing = { "queries": [ { "name": "__testing" }
-                             ],
-                  "events": [ { "domain": "bofm", "type": "test", "attrs": [] } ] }
+    __testing =
+    { "queries": [ { "name": "__testing" }
+                 ]
+    , "events": [ { "domain": "bofm", "type": "test", "attrs": [] }
+                ]
+    }
     equal = function(expr,expected) {
       expr == expected
     }

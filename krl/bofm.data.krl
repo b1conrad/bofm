@@ -1,6 +1,6 @@
 ruleset bofm.data {
   meta {
-    provides ref_cmp, book_names, book_chapters
+    provides ref_parts, ref_cmp, book_names, book_chapters
   }
   global {
     book_names = [
@@ -8,10 +8,10 @@ ruleset bofm.data {
       "Omni", "Words of Mormon", "Mosiah", "Alma", "Helaman",
       "3 Nephi", "4 Nephi", "Mormon", "Ether", "Moroni"
     ]
-    ref_re = re#(.+) (\d+):(\d+)#
+    ref_parts = function(ref) { ref.extract(re#(.+) (\d+):(\d+)#) }
     ref_cmp = function(ref_1,ref_2) {
-      r1 = ref_1.extract(ref_re);
-      r2 = ref_2.extract(ref_re);
+      r1 = ref_parts(ref_1);
+      r2 = ref_parts(ref_2);
       verse_cmp = function() { r1[2].as("Number") <=> r2[2].as("Number") };
       chapter_cmp = function() {
         ans = r1[1].as("Number") <=> r2[1].as("Number"); ans => ans | verse_cmp() };
