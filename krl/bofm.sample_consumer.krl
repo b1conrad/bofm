@@ -26,11 +26,8 @@ ruleset bofm.consumer {
 >>
     }
     refs_form = function() {
-      eci = engine:listChannels()
-            .filter(function(c){c{"name"}=="fragment"&&c{"type"}=="server"})
-            .head(){"id"}; //"G1uvSdAPqFRoG8PRf24Nj2";
       <<
-<form action="/sky/cloud/#{eci}/bofm.consumer/txt.html">
+<form action="/sky/cloud/#{meta:eci}/bofm.consumer/txt.html">
 #{refs_select()}  <input type="submit" value="txt">
 </form>
 >>
