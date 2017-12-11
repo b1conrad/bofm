@@ -9,12 +9,13 @@ ruleset bofm.data {
       "3 Nephi", "4 Nephi", "Mormon", "Ether", "Moroni"
     ]
     ref_parts = function(ref) { ref.extract(re#(.+) (\d+):(\d+)#) }
+    num_cmp = function(a,b) { a.as("Number") <=> b.as("Number") }
     ref_cmp = function(ref_1,ref_2) {
       r1 = ref_parts(ref_1);
       r2 = ref_parts(ref_2);
-      verse_cmp = function() { r1[2].as("Number") <=> r2[2].as("Number") };
+      verse_cmp = function() { num_cmp(r1[2],r2[2]) };
       chapter_cmp = function() {
-        ans = r1[1].as("Number") <=> r2[1].as("Number"); ans => ans | verse_cmp() };
+        ans = num_cmp(r1[1],r2[1]); ans => ans | verse_cmp() };
       book_cmp = book_names.index(r1[0]) <=> book_names.index(r2[0]);
       book_cmp => book_cmp | chapter_cmp()
     }
