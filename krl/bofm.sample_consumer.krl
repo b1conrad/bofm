@@ -26,14 +26,21 @@ ruleset bofm.consumer {
 >>
     }
     refs_form = function() {
-      <<
-<form action="/sky/cloud/#{meta:eci}/bofm.consumer/txt.html">
+      <<<form action="txt.html">
 #{refs_select()}  <input type="submit" value="txt">
 </form>
 >>
     }
-    refs_page = function() {
+    refs_intro = function() {
       timestamps = ent:refs.keys();
+      <<<p>
+Collected between #{timestamps.head()}
+and #{timestamps[timestamps.length()-1]}
+(#{timestamps.length().as("String")})
+</p>
+>>
+    }
+    refs_page = function() {
       <<<!DOCTYPE html>
 <html lang="en">
 <head>
@@ -41,11 +48,7 @@ ruleset bofm.consumer {
 <title>Collected verses</title>
 </head>
 <body>
-<p>
-Collected between #{timestamps.head()}
-and #{timestamps[timestamps.length()-1]}
-(#{timestamps.length().as("String")})
-</p>#{refs_form()}</body>
+#{refs_intro()}#{refs_form()}</body>
 </html>
 >>
     }
