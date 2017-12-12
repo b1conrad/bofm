@@ -23,7 +23,7 @@ ruleset bofm.main {
 >>                              })
                            .values()
                            .join("");
-      <<<dl style="width:400">
+      <<<dl style="width:400px">
 #{verses}</dl>
 >>
     }
@@ -80,6 +80,14 @@ ruleset bofm.main {
     fired {
       ent:minutes := minutes;
       raise bofm event "verse_needed";
+      last;
+    }
+  }
+  rule bofm_start_every_minute {
+    select when bofm start_request
+    fired {
+      ent:minutes := 1;
+      raise bofm event "verse_needed";
     }
   }
   rule bofm_verse_needed {
@@ -116,7 +124,7 @@ ruleset bofm.main {
     pre {
       eci = s{["attributes","outbound_eci"]};
     }
-    event:send({"eci":eci, "domain": "bofm", "type": "verse", "attrs": event:attrs()});
+    event:send({"eci":eci, "domain": "bofm", "type": "verse", "attrs": event:attrs});
   }
   rule bofm_new_consumer {
     select when bofm new_consumer did re#(.+)# setting(consumer_eci)
@@ -126,6 +134,6 @@ ruleset bofm.main {
     event:send(
       { "eci": router_eci, "eid": "new-consumer",
         "domain": "bofm", "type": "new_consumer",
-        "attrs": event:attrs().put("consumer_eci",consumer_eci) } )
+        "attrs": event:attrs.put("consumer_eci",consumer_eci) } )
   }
 }
