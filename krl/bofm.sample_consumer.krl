@@ -54,7 +54,7 @@ and #{timestamps[timestamps.length()-1]}
     }
     txt = function(ref) {
       <<
-<dl style="width:400">
+<dl style="width:400px">
   <dt>#{ref}</dt>
   <dd>#{ent:txts{ref}}</dd>
 </dl>
