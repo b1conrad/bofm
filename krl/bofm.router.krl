@@ -22,7 +22,7 @@ ruleset bofm.router {
   rule autoAccept {
     select when wrangler inbound_pending_subscription_added
     pre{
-      attributes = event:attrs();
+      attributes = event:attrs;
     }
     always{
       raise wrangler event "pending_subscription_approval"
@@ -44,7 +44,7 @@ ruleset bofm.router {
   rule incoming_verse {
     select when bofm verse
     foreach ent:consumers setting(host,eci)
-    event:send({"eci":eci, "domain": "bofm", "type": "verse", "attrs": event:attrs()},
+    event:send({"eci":eci, "domain": "bofm", "type": "verse", "attrs": event:attrs},
       host);
   }
 }

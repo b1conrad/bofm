@@ -16,7 +16,7 @@ ruleset bofm.consumer {
   }
   rule bofm_verse {
     select when bofm verse
-    foreach event:attrs() setting(txt,ref)
+    foreach event:attrs setting(txt,ref)
     fired {
       ent:refs{time:now()} := ref;
       ent:txts{ref} := txt;
