@@ -1,14 +1,14 @@
 ruleset bofm.consumer {
   meta {
     use module bofm.data alias bofm
-    shares __testing, refs, refs_page, txt
+    shares __testing, refs, refs_page, txt_page
   }
   global {
     __testing =
     { "queries": [ { "name": "__testing" }
                  , { "name": "refs" }
                  , { "name": "refs_page" }
-                 , { "name": "txt", "args": [ "ref" ] }
+                 , { "name": "txt_page", "args": [ "ref" ] }
                  ]
     , "events": [
                 ]
@@ -26,7 +26,7 @@ ruleset bofm.consumer {
 >>
     }
     refs_form = function() {
-      <<<form action="txt.html">
+      <<<form action="txt_page.html">
 #{refs_select()}  <input type="submit" value="txt">
 </form>
 >>
@@ -52,12 +52,20 @@ and #{timestamps[timestamps.length()-1]}
 </html>
 >>
     }
-    txt = function(ref) {
-      <<
+    txt_page = function(ref) {
+      <<<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Collected verses</title>
+</head>
+<body>
 <dl style="width:400px">
   <dt>#{ref}</dt>
   <dd>#{ent:txts{ref}}</dd>
 </dl>
+</body>
+</html>
 >>
     }
   }
