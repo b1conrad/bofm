@@ -17,14 +17,26 @@ ruleset bofm.main {
       , { "domain": "bofm", "type": "new_consumer", "attrs": [ "did", "host" ] }
       ]
     }
-    verse = function() {
-      verses = bofm:verse().map(function(v,r){<<  <dt>#{r}</dt>
+    verse_html = function(v,r) {
+      <<  <dt>#{r}</dt>
   <dd>#{v}</dd>
->>                              })
+>>
+    }
+    verse = function() {
+      verses = bofm:verse().map(verse_html)
                            .values()
                            .join("");
-      <<<dl style="width:400px">
+      <<<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Random verse</title>
+</head>
+<body>
+<dl style="width:400px">
 #{verses}</dl>
+</body>
+</html>
 >>
     }
     my_routers = function() {
