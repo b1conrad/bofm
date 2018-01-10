@@ -1,17 +1,22 @@
 ruleset bofm.consumer {
   meta {
     use module bofm.data alias bofm
-    shares __testing, refs, refs_page, txt_page
+    shares __testing, refs, refs_page, txt_page, shortcuts
   }
   global {
     __testing =
     { "queries": [ { "name": "__testing" }
                  , { "name": "refs" }
                  , { "name": "refs_page" }
+                 , { "name": "shortcuts" }
                  , { "name": "txt_page", "args": [ "ref" ] }
                  ]
     , "events": [
                 ]
+    }
+    shortcuts = function() {
+      url = "/io.picolabs.rewrite/picoRewrites?picoID=" + meta:picoId;
+      http:get(meta:host + url){"content"}.decode()
     }
     refs = function() {
       ent:refs.values().sort(bofm:ref_cmp)
@@ -57,7 +62,7 @@ and #{timestamps[timestamps.length()-1]}
 <html lang="en">
 <head>
 <meta charset="utf-8">
-<title>Collected verses</title>
+<title>#{ref}</title>
 </head>
 <body>
 <dl style="width:400px">

@@ -3,8 +3,12 @@ ruleset bofm.consumer {
     shares __testing
   }
   global {
-    __testing = { "queries": [ { "name": "__testing" } ],
-                  "events": [ ] }
+    __testing =
+    { "queries": [ { "name": "__testing" }
+                 ]
+    , "events": [
+                ]
+    }
   }
   rule initialize {
     select when wrangler ruleset_added where rids >< meta:rid
