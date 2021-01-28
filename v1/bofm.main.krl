@@ -45,7 +45,7 @@ ruleset bofm.main {
     }
   }
   rule initialize {
-    select when wrangler ruleset_added where rids >< meta:rid
+    select when wrangler ruleset_added where event:attr("rids") >< meta:rid
     pre {
       bofmBase = meta:rulesetURI;
       bofmURL = "bofm.router.krl";
