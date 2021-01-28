@@ -4,17 +4,9 @@ ruleset bofm.router {
     shares __testing
   }
   global {
-    __testing =
-    { "queries":
-      [ { "name": "__testing" }
-      ]
-    , "events":
-      [ { "domain": "bofm", "type": "consumer_removed", "attrs": [ "consumer_eci"] }
-      ]
-    }
   }
   rule initialize {
-    select when wrangler ruleset_added where rids >< meta:rid
+    select when wrangler ruleset_installed where event:attr("rids") >< meta:rid
     fired {
       ent:consumers := {};
     }

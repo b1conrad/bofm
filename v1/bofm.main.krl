@@ -1,22 +1,10 @@
 ruleset bofm.main {
   meta {
     use module bofm.random alias bofm
-    use module io.picolabs.subscription alias subscription
+    use module io.picolabs.subscription alias subs
     shares __testing, verse
   }
   global {
-    __testing =
-    { "queries":
-      [ { "name": "__testing" }
-      , { "name": "verse" }
-      ]
-    , "events":
-      [ { "domain": "bofm", "type": "test" }
-      , { "domain": "bofm", "type": "start_request", "attrs": [ "minutes" ] }
-      , { "domain": "bofm", "type": "idle_request" }
-      , { "domain": "bofm", "type": "new_consumer", "attrs": [ "did", "host" ] }
-      ]
-    }
     verse_html = function(v,r) {
       <<  <dt>#{r}</dt>
   <dd>#{v}</dd>
@@ -40,41 +28,34 @@ ruleset bofm.main {
 >>
     }
     my_routers = function() {
-      subscription:getSubscriptions(["attributes","subscriber_role"],"router")
-        .map(function(v){v.values().head()})
+      subs:enabled("Tx_role","router")
     }
   }
   rule initialize {
-    select when wrangler ruleset_added where event:attr("rids") >< meta:rid
-    pre {
-      bofmBase = meta:rulesetURI;
-      bofmURL = "bofm.router.krl";
-    }
-    engine:registerRuleset(bofmURL,bofmBase);
+    select when wrangler ruleset_installed where event:attr("rids") >< meta:rid
     fired {
       raise wrangler event "new_child_request"
-        attributes { "dname": "bofm router", "color": "#87cefa",
-                     "rids": "bofm.router;io.picolabs.subscription" };
-      raise wrangler event "install_rulesets_requested"
-        attributes { "rids": "io.picolabs.subscription" };
+        attributes { "name": "bofm router", "backgroundColor": "#87cefa"}
     }
   }
   rule new_router {
     select when wrangler child_initialized
     pre {
       child_eci = event:attr("eci");
+      bofmBase = meta:rulesetURI;
+      bofmRID = "bofm.router";
     }
-    noop();
+    event:send({"eci":child_eci,
+      "domain":"wrangler", "type":"install_ruleset_request",
+      "attrs":{"absoluteURL":bofmBase, "rid":bofmRID}
+    })
     fired {
-    }
-    finally {
       raise wrangler event "subscription" attributes
         { "name" : "to_router",
-          "name_space" : "bofm",
-          "my_role" : "generator",
-          "subscriber_role" :"router",
+          "Rx_role" : "generator",
+          "Tx_role" :"router",
           "channel_type" : "subscription",
-          "subscriber_eci" : child_eci
+          "wellKnown_Tx" : child_eci
         }
     }
   }
