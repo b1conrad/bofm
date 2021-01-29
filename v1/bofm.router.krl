@@ -1,9 +1,22 @@
 ruleset bofm.router {
   meta {
     use module io.picolabs.subscription alias subscription
-    shares __testing
+    shares __testing, consumers
   }
   global {
+    __testing =
+    { "queries":
+      [ { "name": "__testing" }
+      , { "name": "consumers" }
+      ]
+    , "events":
+      [ { "domain": "bofm", "name": "new_consumer", "attrs": [ "consumer_eci", "host" ] }
+      , { "domain": "bofm", "name": "consumer_removed", "attrs": [ "consumer_eci"] }
+      ]
+    }
+    consumers = function(){
+      ent:consumers
+    }
   }
   rule initialize {
     select when wrangler ruleset_installed where event:attr("rids") >< meta:rid

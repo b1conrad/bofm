@@ -28,7 +28,7 @@ ruleset bofm.main {
 >>
     }
     my_routers = function() {
-      subs:enabled("Tx_role","router")
+      subs:established("Tx_role","router")
     }
   }
   rule initialize {
@@ -115,14 +115,14 @@ ruleset bofm.main {
     select when bofm verse_to_route
     foreach my_routers() setting(s)
     pre {
-      eci = s{["attributes","outbound_eci"]};
+      eci = s{"Tx"};
     }
     event:send({"eci":eci, "domain": "bofm", "type": "verse", "attrs": event:attrs});
   }
   rule bofm_new_consumer {
     select when bofm new_consumer did re#(.+)# setting(consumer_eci)
     pre {
-      router_eci = my_routers().head(){["attributes","subscriber_eci"]};
+      router_eci = my_routers().head(){"Tx"};
     }
     event:send(
       { "eci": router_eci, "eid": "new-consumer",
