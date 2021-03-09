@@ -2,7 +2,7 @@ ruleset bofm.main {
   meta {
     use module bofm.random alias bofm
     use module io.picolabs.subscription alias subs
-    shares __testing, verse
+    shares __testing, verse, schedule_id, schedule_list
   }
   global {
     verse_html = function(v,r) {
@@ -29,6 +29,12 @@ ruleset bofm.main {
     }
     my_routers = function() {
       subs:established("Tx_role","router")
+    }
+    schedule_id = function(){
+      ent:schedule_id
+    }
+    schedule_list = function(){
+      schedule:list()
     }
   }
   rule initialize {
